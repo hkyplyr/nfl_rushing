@@ -1,0 +1,77 @@
+<html>
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        
+        <style>
+            th {
+                text-align: center;
+            }
+            td {
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <form style=float:left; method="GET">
+                Filter by name: <input name="name">
+                <input type="submit">
+            </form>
+            <a href="{{ download_url }}" style=float:right;>Download data as .csv</a>
+        </div>
+        <div>
+        <table class="table table-bordered table-hover">
+            <thead class="thead-light">
+                <tr>
+                    <th class="text-left">Player</th>
+                    <th>Team</th>
+                    <th>Pos</th>
+                    <th>Att</th>
+                    <th>Att/G</th>
+                    <th><a href="{{ sort_yds_url }}">Yds</a></th>
+                    <th>Avg</th>
+                    <th>Yds/G</th>
+                    <th><a href="{{ sort_td_url }}">TD</a></th>
+                    <th><a href="{{ sort_lng_url }}">Lng</a></th>
+                    <th>1st</th>
+                    <th>1st%</th>
+                    <th>20+</th>
+                    <th>40+</th>
+                    <th>FUM</th>
+                </tr>
+            </thead>
+            {% for player in players %}
+            <tr>
+                <td class="text-left">{{ player.name }}</td>
+                <td>{{ player.team }}</td>
+                <td>{{ player.position }}</td>
+                <td>{{ player.attempts }}</td>
+                <td>{{ player.attempts_per_game }}</td>
+                <td>{{ player.yards }}</td>
+                <td>{{ player.yards_per_carry }}</td>
+                <td>{{ player.yards_per_game }}</td>
+                <td>{{ player.touchdowns }}</td>
+                <td>{{ player.longest_run }}</td>
+                <td>{{ player.first_downs }}</td>
+                <td>{{ player.first_down_percentage }}</td>
+                <td>{{ player.over_twenty }}</td>
+                <td>{{ player.over_forty }}</td>
+                <td>{{ player.fumbles }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        </div>
+        {% if prev_url %}
+        <a href="{{ prev_url }}">Next 10</a>
+        {% endif %}
+        {% if next_url %}
+        <a style=float:right href="{{ next_url }}">Next 10</a>
+        {% endif %}
+
+    </body>
+</html>
