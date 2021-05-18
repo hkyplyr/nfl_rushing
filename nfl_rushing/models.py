@@ -1,7 +1,3 @@
-import json
-
-from flask import Flask
-
 from nfl_rushing.database import db
 
 
@@ -36,17 +32,13 @@ class Player(db.Model):
         else:
             return Player.yards
 
-
-def __load_data():
-    with open('rushing.json', 'r') as f:
-        rushing_data = json.load(f)
-
-    for data in rushing_data:
+    @staticmethod
+    def init(data):
         longest_run = str(data['Lng'])
         long_is_touchdown = 'T' in longest_run
         longest_run = int(longest_run.replace('T', ''))
 
-        player = Player(
+        return Player(
             name=data['Player'],
             team=data['Team'],
             position=data['Pos'],
@@ -62,22 +54,4 @@ def __load_data():
             first_down_percentage=data['1st%'],
             over_twenty=data['20+'],
             over_forty=data['40+'],
-            fumbles=data['FUM']
-        )
-        db.session.add(player)
-    db.session.commit()
-
-
-if __name__ == '__main__':
-    print('Creating database tables')
-    app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///rushing.db'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    db.init_app(app)
-    app.app_context().push()
-
-    db.create_all()
-
-    print('Loading data into database')
-    __load_data()
-    print('Done!')
+            fumbles=data['FUM'])
