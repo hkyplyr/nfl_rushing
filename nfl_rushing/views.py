@@ -1,5 +1,8 @@
 import csv
+import tempfile
+
 from flask import Blueprint, render_template, request, send_file, url_for
+
 from nfl_rushing.models import Player
 
 bp = Blueprint('bp', __name__)
@@ -30,15 +33,14 @@ def download():
 
     players = __get_base_query(name, sort).all()
 
-    filename = 'data.csv'
-    with open(f'nfl_rushing/{filename}', 'w') as f:
+    with tempfile.NamedTemporaryFile(mode='w') as f:
         writer = csv.writer(f)
         headers = Player.__table__.columns.keys()
         writer.writerow(headers)
         for player in players:
             writer.writerow([getattr(player, c) for c in headers])
 
-    return send_file(filename, download_name=filename, as_attachment=True, max_age=-1)
+        return send_file(f.name, download_name='data.csv', as_attachment=True, max_age=-1)
 
 
 def __get_sort_query_param():
