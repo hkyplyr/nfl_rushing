@@ -55,12 +55,18 @@ If you have any questions regarding requirements, do not hesitate to email your 
 
 ### Installation and running this solution
 #### __Running the service (using docker)__
-1. Run the application
+1. Clone and navigate into the repository
+``` sh
+git clone git@github.com:hkyplyr/nfl_rushing.git
+cd nfl_rushing
+```
+
+2. Run the application
 ``` sh
 docker compose up
 ```
 
-2. Open the application in your browser (_Works best with Chrome or Safari_): http://127.0.0.1:5000
+3. Open the application in your browser (_Works best with Chrome or Safari_): http://127.0.0.1:5000
 
 #### __Running the service (from source)__
 1. Clone and navigate into the repository
