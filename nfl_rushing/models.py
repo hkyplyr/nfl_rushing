@@ -24,6 +24,24 @@ class Player(db.Model):
     def get_stylized_longest_run(self):
         return self.longest_run if not self.long_is_touchdown \
             else f'{self.longest_run}T'
+    def table_data(self):
+        return [
+            self.name,
+            self.team,
+            self.position,
+            self.attempts,
+            self.attempts_per_game,
+            self.yards,
+            self.yards_per_carry,
+            self.yards_per_game,
+            self.touchdowns,
+            self.longest_run if not self.long_is_touchdown else f'{self.longest_run}T',
+            self.first_downs,
+            self.first_down_percentage,
+            self.over_twenty,
+            self.over_forty,
+            self.fumbles
+        ]
 
     @staticmethod
     def init(data):
