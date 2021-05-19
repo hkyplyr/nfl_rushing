@@ -1,0 +1,12 @@
+th, td {
+  width: 5%;
+  text-align: center;
+}
+
+th:first-child, td:first-child {
+  position: sticky;
+  left: -1px;
+  background-color: white;
+  text-align: left;
+  width: 20%;
+}
