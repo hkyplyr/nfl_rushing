@@ -1,35 +1,5 @@
 <html>
 
-    <body>
-        <div>
-            <form style=float:left; method="GET">
-                Filter by name: <input name="name">
-                <input type="submit">
-            </form>
-            <a href="{{ download_url }}" style=float:right;>Download data as .csv</a>
-        </div>
-        <div>
-        <table class="table table-bordered table-hover">
-            <thead class="thead-light">
-                <tr>
-                    <th class="text-left">Player</th>
-                    <th>Team</th>
-                    <th>Pos</th>
-                    <th>Att</th>
-                    <th>Att/G</th>
-                    <th><a href="{{ sort_yds_url }}">Yds</a></th>
-                    <th>Avg</th>
-                    <th>Yds/G</th>
-                    <th><a href="{{ sort_td_url }}">TD</a></th>
-                    <th><a href="{{ sort_lng_url }}">Lng</a></th>
-                    <th>1st</th>
-                    <th>1st%</th>
-                    <th>20+</th>
-                    <th>40+</th>
-                    <th>FUM</th>
-                </tr>
-            </thead>
-            {% for player in players %}
 <head>
   <title>2016 NFL Rushing Statistics</title>
   <!-- Required meta tags -->
@@ -45,32 +15,100 @@
   <!-- Stylesheet -->
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
+<body>
+  <div class="container">
+    <div id="title-row" class="row justify-content-center">
+      <h1>2016 NFL Rushing Statistics</h1>
+    </div>
+
+    <div title="filter-row" class="row justify-content-between">
+      <div class="col-auto">
+        <form method="GET">
+          {% set placeholder = '' if name is none else name %}
+          Filter by name: <input id="name-filter" name="name" value="{{ placeholder }}" maxlength=100>
+          <input id="submit-button" type="submit" value="Submit" class="btn btn-primary btn-sm">
+          <a href="{{ url_for('bp.index', sort=sort, page=page) }}" class="btn btn-secondary btn-sm">Clear</a>
+        </form>
+      </div>
+      <div class="col-auto">
+        <a href="{{ url_for('bp.download', sort=sort, name=name) }}" class="btn btn-secondary btn-sm flo">Download</a>
+      </div>
+    </div>
+
+    <div id="table-row" class="row h-75">
+      <div class="table-responsive h-100">
+        <table class="table">
+          <thead class="thead-light">
             <tr>
-                <td class="text-left">{{ player.name }}</td>
-                <td>{{ player.team }}</td>
-                <td>{{ player.position }}</td>
-                <td>{{ player.attempts }}</td>
-                <td>{{ player.attempts_per_game }}</td>
-                <td>{{ player.yards }}</td>
-                <td>{{ player.yards_per_carry }}</td>
-                <td>{{ player.yards_per_game }}</td>
-                <td>{{ player.touchdowns }}</td>
-                <td>{{ player.longest_run }}</td>
-                <td>{{ player.first_downs }}</td>
-                <td>{{ player.first_down_percentage }}</td>
-                <td>{{ player.over_twenty }}</td>
-                <td>{{ player.over_forty }}</td>
-                <td>{{ player.fumbles }}</td>
+              {% for column in columns %}
+              <th>
+                <a href="{{ url_for('bp.index', sort=column.get_sort(sort), name=name, page=page) }}" data-toggle="tooltip" title="{{ column.tooltip }}">
+                  {{ column.get_display(sort) }}
+                </a>
+              </th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for player in players.items %}
+            <tr>
+              <td >{{ player.name }}</td>
+              <td>{{ player.team }}</td>
+              <td>{{ player.position }}</td>
+              <td>{{ player.attempts }}</td>
+              <td>{{ player.attempts_per_game }}</td>
+              <td>{{ player.yards }}</td>
+              <td>{{ player.yards_per_carry }}</td>
+              <td>{{ player.yards_per_game }}</td>
+              <td>{{ player.touchdowns }}</td>
+              <td>{{ player.get_stylized_longest_run() }}</td>
+              <td>{{ player.first_downs }}</td>
+              <td>{{ player.first_down_percentage }}</td>
+              <td>{{ player.over_twenty }}</td>
+              <td>{{ player.over_forty }}</td>
+              <td>{{ player.fumbles }}</td>
+            </tr>
+            {% else %}
+            <tr>
+              <td class="text-center" colspan="15">No players found matching "{{ name }}"</td>
             </tr>
             {% endfor %}
+          </tbody>
         </table>
-        </div>
-        {% if prev_url %}
-        <a href="{{ prev_url }}">Next 10</a>
+      </div>
+    </div>
+    <div id="paging-row" class="row justify-content-center">
+      <div class="col-xl-1 col-lg-1 col-md-2 col-sm-2 col-2 text-center">
+        {% if players.has_prev %}
+        <a href="{{ url_for('bp.index', sort=sort, name=name, page=1) }}" class="btn btn-primary btn-sm">First</a>
         {% endif %}
-        {% if next_url %}
-        <a style=float:right href="{{ next_url }}">Next 10</a>
+      </div>
+      <div class="col-xl-1 col-lg-1 col-md-2 col-sm-2 col-2 text-center">
+        {% if players.has_prev %}
+        <a href="{{ url_for('bp.index', sort=sort, name=name, page=players.prev_num) }}"
+          class="btn btn-primary btn-sm">Prev</a>
         {% endif %}
+      </div>
+      <div class="col-xl-1 col-lg-1 col-md-2 col-sm-2 col-2 text-center">
+        {% if (sort is not none) or (name is not none) %}
+        <a href="{{ url_for('bp.index') }}" class="btn btn-secondary btn-sm">Reset</a>
+        {% endif %}
+      </div>
+      <div class="col-xl-1 col-lg-1 col-md-2 col-sm-2 col-2 text-center">
+        {% if players.has_next %}
+        <a href="{{ url_for('bp.index', sort=sort, name=name, page=players.next_num) }}"
+          class="btn btn-primary btn-sm">Next</a>
+        {% endif %}
+      </div>
+      <div class="col-xl-1 col-lg-1 col-md-2 col-sm-2 col-2 text-center">
+        {% if players.has_next %}
+        <a href="{{ url_for('bp.index', sort=sort, name=name, page=players.pages) }}"
+          class="btn btn-primary btn-sm">Last</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</body>
 
-    </body>
 </html>
