@@ -21,16 +21,9 @@ class Player(db.Model):
     over_forty = db.Column(db.Integer)
     fumbles = db.Column(db.Integer)
 
-    @staticmethod
-    def get_column_for_sort(sort_value):
-        if sort_value == 'yds':
-            return Player.yards
-        elif sort_value == 'td':
-            return Player.touchdowns
-        elif sort_value == 'lng':
-            return Player.longest_run
-        else:
-            return Player.yards
+    def get_stylized_longest_run(self):
+        return self.longest_run if not self.long_is_touchdown \
+            else f'{self.longest_run}T'
 
     @staticmethod
     def init(data):

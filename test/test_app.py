@@ -42,6 +42,24 @@ def test_sorted_by_yds():
             assert player.encode() not in page_one_explicit.data
 
 
+def test_sorted_by_yds_asc():
+    page_one_players = ['Sam Koch', 'DeMarcus Ayers', 'Eli Manning', 'Taiwan Jones', 'James Wright',
+                        'Ryan Mallet', 'Travis Kelce', 'Nick Foles', 'Landry Jones', 'Brandon Burks',
+                        'Reggie Bush', 'Jordan Berry', 'Matt McGloin', 'Travis Benjamin', 'Drew Stanton']
+    page_two_players = ['Will Fuller', 'Brett Hundley', 'Brandon LaFell', 'Valentino Blake', 'Matt Schaub',
+                        'Chad Henne', 'Mark Sanchez', 'Brian Hoyer', 'Jamison Crowder', 'Cardale Jones',
+                        'Matt Moore', 'Kellen Clemens', 'Jeremy Maclin', 'Sean Mannion', 'Donte Moncrief']
+    with flask_app.test_client() as test_client:
+        page_one = test_client.get('/?page=1&sort=yds-')
+        page_two = test_client.get('/?page=2&sort=yds-')
+        for player in page_one_players:
+            assert player.encode() in page_one.data
+            assert player.encode() not in page_two.data
+        for player in page_two_players:
+            assert player.encode() in page_two.data
+            assert player.encode() not in page_one.data
+
+
 def test_sorted_by_tds():
     page_one_players = ['LeGarrette Blount', 'David Johnson', 'Ezekiel Elliot', 'LeSean McCoy', 'Latavius Murray',
                         'Devonta Freeman', 'Melvin Gordon', 'Jeremy Hill', 'Jonathan Stewart', 'DeMarco Murray',
