@@ -1,4 +1,6 @@
 import json
+import os
+import shutil
 
 from flask import request
 
@@ -128,3 +130,37 @@ def test_download():
         response_data = test_client.get('/download').data.decode()
         for player in expected_players:
             assert player in response_data
+
+
+def test_download_exists():
+    with flask_app.test_client() as test_client:
+        response_one = test_client.get('/download').data.decode()
+        response_two = test_client.get('/download').data.decode()
+        assert response_one == response_two
+
+
+def test_download_filtered():
+    players_named_eli = ['Eli Rogers', 'Eli Manning']
+    with flask_app.test_client() as test_client:
+        response = test_client.get('/download?name=eli')
+        response_data = response.data.decode()
+        assert 'data-name-eli.csv' in response.headers['content-disposition']
+        for player in players_named_eli:
+            assert player in response_data
+
+
+def test_download_sorted():
+    with flask_app.test_client() as test_client:
+        with open('rushing.json', 'r') as f:
+            expected_players = [d['Player'] for d in json.load(f)]
+        response = test_client.get('/download?sort=td')
+        response_data = response.data.decode()
+        assert 'data-sort-td.csv' in response.headers['content-disposition']
+        for player in expected_players:
+            assert player in response_data
+
+
+def teardown_module():
+    directory_name = 'nfl_rushing/reports'
+    if os.path.exists(directory_name):
+        shutil.rmtree(directory_name)
