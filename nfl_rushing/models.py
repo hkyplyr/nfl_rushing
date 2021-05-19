@@ -21,9 +21,6 @@ class Player(db.Model):
     over_forty = db.Column(db.Integer)
     fumbles = db.Column(db.Integer)
 
-    def get_stylized_longest_run(self):
-        return self.longest_run if not self.long_is_touchdown \
-            else f'{self.longest_run}T'
     def table_data(self):
         return [
             self.name,
