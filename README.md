@@ -54,5 +54,59 @@ We will evaluate you on your ability to solve the problem defined in the require
 If you have any questions regarding requirements, do not hesitate to email your contact at theScore for clarification.
 
 ### Installation and running this solution
-* Run with `docker compose up`
-* Run `pytest --cov=nfl_rushing . --cov-report term-missing` to run tests with coverage
+#### __Running the service (using docker)__
+1. Run the application
+``` sh
+docker compose up
+```
+
+2. Open the application in your browser (_Works best with Chrome or Safari_): http://127.0.0.1:5000
+
+#### __Running the service (from source)__
+1. Clone and navigate into the repository
+``` sh
+git clone git@github.com:hkyplyr/nfl_rushing.git
+cd nfl_rushing
+```
+
+2. (Optional) Create a virtual environment (_using [virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/install.html)_)
+``` sh
+mkvirtualenv nfl_rushing
+```
+
+3. Install dependencies
+``` sh
+pip install -r requirements.txt
+```
+
+4. Set required environment variables
+``` sh
+# Ensures the modules in this repo can be found when running python
+export PYTHONPATH=$(pwd)
+
+# Flask specific variable that indicates which file contains the application logic
+export FLASK_APP=nfl_rushing.app.py
+
+# Flask specific variable that enables development mode which includes auto-reloading when files change
+export FLASK_ENV=development
+```
+
+5. (Optional) Run tests w/ or w/o coverage
+``` sh
+# Without coverage
+pytest .
+
+# With coverage
+pytest --cov=nfl_rushing .
+```
+
+6. Run the application
+``` sh
+flask run
+```
+
+7. Open the application in your browser (_Works best with Chrome or Safari_): http://127.0.0.1:5000
+
+#### __Notes__
+* Works best with Chrome due to a weird UI glitch on Firefox where the top and bottom borders don't appear for the cells in the first column of the table.
+  * This seems to be because the CSS used to make the first column sticky (for horizontal scrolling) is overriding the style from the bootstrap CSS.
