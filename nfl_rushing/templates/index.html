@@ -64,21 +64,9 @@
           <tbody>
             {% for player in players.items %}
             <tr>
-              <td >{{ player.name }}</td>
-              <td>{{ player.team }}</td>
-              <td>{{ player.position }}</td>
-              <td>{{ player.attempts }}</td>
-              <td>{{ player.attempts_per_game }}</td>
-              <td>{{ player.yards }}</td>
-              <td>{{ player.yards_per_carry }}</td>
-              <td>{{ player.yards_per_game }}</td>
-              <td>{{ player.touchdowns }}</td>
-              <td>{{ player.get_stylized_longest_run() }}</td>
-              <td>{{ player.first_downs }}</td>
-              <td>{{ player.first_down_percentage }}</td>
-              <td>{{ player.over_twenty }}</td>
-              <td>{{ player.over_forty }}</td>
-              <td>{{ player.fumbles }}</td>
+              {% for player_data in player.table_data() %}
+              <td>{{ player_data }}</td>
+              {% endfor %}
             </tr>
             {% else %}
             <tr>
