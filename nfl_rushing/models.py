@@ -21,7 +21,7 @@ class Player(db.Model):
     over_forty = db.Column(db.Integer)
     fumbles = db.Column(db.Integer)
 
-    def table_data(self):
+    def to_table_data(self):
         return [
             self.name,
             self.team,
@@ -41,25 +41,25 @@ class Player(db.Model):
         ]
 
     @staticmethod
-    def init(data):
-        longest_run = str(data['Lng'])
+    def to_database_model(json):
+        longest_run = str(json['Lng'])
         long_is_touchdown = 'T' in longest_run
         longest_run = int(longest_run.replace('T', ''))
 
         return Player(
-            name=data['Player'],
-            team=data['Team'],
-            position=data['Pos'],
-            attempts=data['Att'],
-            attempts_per_game=data['Att/G'],
-            yards=data['Yds'],
-            yards_per_carry=data['Avg'],
-            yards_per_game=data['Yds/G'],
-            touchdowns=data['TD'],
+            name=json['Player'],
+            team=json['Team'],
+            position=json['Pos'],
+            attempts=json['Att'],
+            attempts_per_game=json['Att/G'],
+            yards=json['Yds'],
+            yards_per_carry=json['Avg'],
+            yards_per_game=json['Yds/G'],
+            touchdowns=json['TD'],
             longest_run=longest_run,
             long_is_touchdown=long_is_touchdown,
-            first_downs=data['1st'],
-            first_down_percentage=data['1st%'],
-            over_twenty=data['20+'],
-            over_forty=data['40+'],
-            fumbles=data['FUM'])
+            first_downs=json['1st'],
+            first_down_percentage=json['1st%'],
+            over_twenty=json['20+'],
+            over_forty=json['40+'],
+            fumbles=json['FUM'])

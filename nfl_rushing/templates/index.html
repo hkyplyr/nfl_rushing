@@ -64,7 +64,7 @@
           <tbody>
             {% for player in players.items %}
             <tr>
-              {% for player_data in player.table_data() %}
+              {% for player_data in player.to_table_data() %}
               <td>{{ player_data }}</td>
               {% endfor %}
             </tr>
